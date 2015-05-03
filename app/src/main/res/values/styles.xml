@@ -3,6 +3,8 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
+        <!--Status bar transparent-->
+        <item name="android:windowTranslucentStatus">true</item>
     </style>
 
 </resources>
