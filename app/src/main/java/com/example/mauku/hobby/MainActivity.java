@@ -17,6 +17,7 @@ import android.widget.Button;
 import com.parse.LogInCallback;
 import com.parse.ParseException;
 import com.parse.ParseFacebookUtils;
+import com.parse.ParseTwitterUtils;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
 
@@ -37,8 +38,11 @@ public class MainActivity extends Activity {
 
 
         Button facebook=(Button) findViewById(R.id.facebook);
+        Button twitter=(Button) findViewById(R.id.twitter);
+
         Typeface type=Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         facebook.setTypeface(type);
+        twitter.setTypeface(type);
 
 
 
@@ -53,7 +57,7 @@ public class MainActivity extends Activity {
         ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
     }
 
-    public void onLoginClick(View v) {
+    public void onLoginClickFacebook(View v) {
 
         progressDialog = ProgressDialog.show(MainActivity.this, "", "Logging in...", true);
 
@@ -71,6 +75,26 @@ public class MainActivity extends Activity {
                     Log.d("", "User signed up and logged in through Facebook!");
                 } else {
                     Log.d("", "User logged in through Facebook!");
+                }
+            }
+        });
+    }
+
+    public void onLoginClickTwitter(View v) {
+
+        progressDialog = ProgressDialog.show(MainActivity.this, "", "Logging in...", true);
+        // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
+        // (https://developers.facebook.com/docs/facebook-login/permissions/)
+
+        ParseTwitterUtils.logIn(this, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException err) {
+                if (user == null) {
+                    Log.d("MyApp", "Uh oh. The user cancelled the Twitter login.");
+                } else if (user.isNew()) {
+                    Log.d("MyApp", "User signed up and logged in through Twitter!");
+                } else {
+                    Log.d("MyApp", "User logged in through Twitter!");
                 }
             }
         });
