@@ -15,7 +15,8 @@
         android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="77dp">
+        android:layout_marginBottom="77dp"
+        android:onClick="onLoginClick">
 
         <Button
             style="?android:attr/borderlessButtonStyle"

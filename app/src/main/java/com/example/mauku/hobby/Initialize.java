@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.parse.Parse;
+import com.parse.ParseFacebookUtils;
 
 /**
  * Created by mauku on 3/05/15.
@@ -12,9 +13,7 @@ public class Initialize extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        // Enable Local Datastore.
-        Context contexto = this;
-        Parse.enableLocalDatastore(this);
-        Parse.initialize(this, "zHeAvzqmxitOsmaDsX5KNdD8xztxp5tf8Q8ZjToe", "BIBxsTYvIX3MY7ZiF4DPSzZbkIKS2P6NmfOMKIWH");
+        Parse.initialize(this, "sd1P6bgbus2MPGXF0TDIDKaX62tZT9RGbqQhiiNQ", "NFCIULEhNch0kei5uhXwefm49HiaMJFSAO25GQgM");
+        ParseFacebookUtils.initialize(getResources().getString(R.string.app_id));
     }
 }

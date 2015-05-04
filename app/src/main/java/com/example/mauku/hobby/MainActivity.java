@@ -1,6 +1,9 @@
 package com.example.mauku.hobby;
 
 import android.app.Activity;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -11,35 +14,24 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.parse.LogInCallback;
 import com.parse.ParseException;
+import com.parse.ParseFacebookUtils;
 import com.parse.ParseUser;
 import com.parse.SignUpCallback;
+
+import java.util.Arrays;
+import java.util.List;
 
 
 public class MainActivity extends Activity {
     private CustomPagerAdapter mCustomPagerAdapter;
     private ViewPager mViewPager;
+    private Dialog progressDialog;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        ParseUser user = new ParseUser();
-        user.setUsername("my name");
-        user.setPassword("my pass");
-        user.setEmail("email@example.com");
-
-    // other fields can be set just like with ParseObject
-        user.put("phone", "650-555-0000");
-
-        user.signUpInBackground(new SignUpCallback() {
-            public void done(ParseException e) {
-                if (e == null) {
-                    // Hooray! Let them use the app now.
-                } else {
-                    // Sign up didn't succeed. Look at the ParseException
-                    // to figure out what went wrong
-                }
-            }
-        });
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -48,15 +40,39 @@ public class MainActivity extends Activity {
         Typeface type=Typeface.createFromAsset(getAssets(), "fonts/Roboto-Regular.ttf");
         facebook.setTypeface(type);
 
-        facebook.setOnClickListener (new View.OnClickListener() {
-            public void onClick(View v) {
-                // Perform action on click
-                Log.d("Prueba", "facebook");
-            }
-        });
+
 
         mCustomPagerAdapter = new CustomPagerAdapter(this);
         mViewPager = (ViewPager) findViewById(R.id.pager);
         mViewPager.setAdapter(mCustomPagerAdapter);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        ParseFacebookUtils.finishAuthentication(requestCode, resultCode, data);
+    }
+
+    public void onLoginClick(View v) {
+
+        progressDialog = ProgressDialog.show(MainActivity.this, "", "Logging in...", true);
+
+        List<String> permissions = Arrays.asList("public_profile", "email");
+        // NOTE: for extended permissions, like "user_about_me", your app must be reviewed by the Facebook team
+        // (https://developers.facebook.com/docs/facebook-login/permissions/)
+
+        ParseFacebookUtils.logIn(permissions, this, new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException err) {
+                progressDialog.dismiss();
+                if (user == null) {
+                    Log.d("", "Uh oh. The user cancelled the Facebook login.");
+                } else if (user.isNew()) {
+                    Log.d("", "User signed up and logged in through Facebook!");
+                } else {
+                    Log.d("", "User logged in through Facebook!");
+                }
+            }
+        });
     }
 }
